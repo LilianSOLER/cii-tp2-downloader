@@ -1,3 +1,6 @@
+/* downloader.ui.StackLayout
+ * (c) blanch@imag.fr 2021–                                                */
+
 package downloader.ui;
 
 import java.awt.LayoutManager;

@@ -1,3 +1,6 @@
+/* downloader.fc.Downloader
+ * (c) blanch@imag.fr 2021–                                                */
+
 package downloader.fc;
 
 import java.net.URL;

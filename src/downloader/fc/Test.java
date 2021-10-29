@@ -1,3 +1,6 @@
+/* downloader.fc.Test
+ * (c) blanch@imag.fr 2021–                                                */
+
 package downloader.fc;
 
 import java.beans.PropertyChangeListener;
