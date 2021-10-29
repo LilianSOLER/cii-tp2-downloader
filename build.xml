@@ -1,0 +1,46 @@
+<project name="Downloader" basedir="." default="all">
+	<property name="src.dir"     value="src" />
+	<property name="build.dir"   value="build" />
+	<property name="classes.dir" value="${build.dir}/classes" />
+	<property name="jar.dir"     value="${build.dir}/jar" />
+	<property name="jar.file"    value="${jar.dir}/${ant.project.name}.jar" />
+	<property name="main-class"  value="downloader.ui.Main" />
+
+	<target name="clean">
+		<delete dir="${build.dir}" />
+	</target>
+	<target name="compile">
+		<mkdir dir="${classes.dir}" />
+		<javac srcdir="${src.dir}" destdir="${classes.dir}"
+		       encoding="UTF-8" includeantruntime="false" />
+	</target>
+	
+	<target name="jar" depends="compile">
+		<mkdir dir="${jar.dir}" />
+		<jar destfile="${jar.file}" basedir="${classes.dir}">
+			<manifest>
+				<attribute name="Main-Class" value="${main-class}" />
+			</manifest>
+		</jar>
+	</target>
+	
+	<path id="project.class.path">
+		<pathelement location="${jar.file}" />
+	</path>
+	
+	<target name="run-fc" depends="jar">
+		<java classname="downloader.fc.Test" fork="true">
+			<classpath refid="project.class.path" />
+			<arg value="http://iihm.imag.fr/index.html" />
+		</java>
+	</target>
+		
+	<target name="run" depends="jar">
+		<java classname="${main-class}" fork="true">
+			<classpath refid="project.class.path" />
+			<arg value="http://iihm.imag.fr/index.html" />
+		</java>
+	</target>
+	
+	<target name="all" depends="clean,run" />
+</project>
