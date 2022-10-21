@@ -1,5 +1,5 @@
 /* downloader.fc.Downloader
- * (c) blanch@imag.fr 2021–                                                */
+ * (c) blanch@imag.fr 2021–2023                                            */
 
 package downloader.fc;
 
