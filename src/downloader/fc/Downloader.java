@@ -28,7 +28,7 @@ public class Downloader {
 	String filename;
 	File temp;
 	FileOutputStream out;
-	
+
 	private int _progress;
 	private PropertyChangeSupport pcs = new PropertyChangeSupport(this);
 	
@@ -40,7 +40,7 @@ public class Downloader {
 			content_length = connection.getContentLength();
 			
 			in = new BufferedInputStream(connection.getInputStream());
-			
+
 			String[] path = url.getFile().split("/");
 			filename = path[path.length-1];
 			temp = File.createTempFile(filename, ".part");
@@ -70,7 +70,7 @@ public class Downloader {
 			
 			size += count;
 			setProgress(100*size/content_length);
-			Thread.sleep(1000);
+			Thread.sleep(100);
 		}
 		
 		if(size < content_length) {
@@ -79,7 +79,14 @@ public class Downloader {
 		}
 		
 		try {
-			Files.copy(temp.toPath(), new File(filename).toPath(), java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+			// copy file into ./download
+			File download = new File("download");
+			if(!download.exists()) { download.mkdir(); }
+			// verify that the file does not exist
+			File file = new File(download, filename);
+			if(file.exists()) { file.delete(); }
+			// move the file
+			Files.move(temp.toPath(), file.toPath());
 			temp.delete();
 		}
 		catch(IOException e){
