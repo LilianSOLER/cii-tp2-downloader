@@ -30,6 +30,8 @@ public class Downloader extends SwingWorker<String, Void> {
 	File temp;
 	FileOutputStream out;
 
+	boolean paused = false;
+
 	private int _progress;
 	private PropertyChangeSupport pcs = new PropertyChangeSupport(this);
 	
@@ -61,6 +63,11 @@ public class Downloader extends SwingWorker<String, Void> {
 		int count = 0;
 		
 		while(true) {
+			if(paused) {
+				synchronized(this) {
+					wait();
+				}
+			}
 			try { count = in.read(buffer, 0, CHUNK_SIZE); }
 			catch(IOException e) { continue; }
 
@@ -71,7 +78,7 @@ public class Downloader extends SwingWorker<String, Void> {
 			
 			size += count;
 			setProgress(100*size/content_length);
-			Thread.sleep(100);
+			Thread.sleep(10);
 		}
 		
 		if(size < content_length) {
@@ -123,5 +130,22 @@ public class Downloader extends SwingWorker<String, Void> {
 		catch(Exception e) {
 			System.err.println("failed!");
 		}
+	}
+
+	public String getFilename() {
+		return filename;
+	}
+
+	public void pause() {
+		paused = !paused;
+		if(!paused) {
+			synchronized(this) {
+				notify();
+			}
+		}
+	}
+
+	public boolean isPaused() {
+		return paused;
 	}
 }
