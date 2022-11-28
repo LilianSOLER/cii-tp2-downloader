@@ -19,16 +19,7 @@ public class Main extends JFrame {
 		for (String url : urls){
 			Downloader downloader = new Downloader(url);
 			add(new Download(downloader));
-			new Thread(new Runnable() {
-				@Override
-				public void run() {
-					try {
-						downloader.download();
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
-				}
-			}).start();
+			downloader.execute();
 		}
 
 	}

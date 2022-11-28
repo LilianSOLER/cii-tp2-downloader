@@ -3,6 +3,7 @@
 
 package downloader.fc;
 
+import javax.swing.*;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.MalformedURLException;
@@ -18,7 +19,7 @@ import java.beans.PropertyChangeSupport;
 import java.beans.PropertyChangeListener;
 
 
-public class Downloader {
+public class Downloader extends SwingWorker<String, Void> {
 	public static final int CHUNK_SIZE = 1024;
 	
 	URL url;
@@ -94,22 +95,33 @@ public class Downloader {
 		}
 		return filename;
 	}
-	
-	public int getProgress() {
-		return _progress;
+
+
+	/**
+	 * Computes a result, or throws an exception if unable to do so.
+	 *
+	 * <p>
+	 * Note that this method is executed only once.
+	 *
+	 * <p>
+	 * Note: this method is executed in a background thread.
+	 *
+	 * @return the computed result
+	 * @throws Exception if unable to compute a result
+	 */
+	@Override
+	protected String doInBackground() throws Exception {
+		return download();
 	}
-	
-	public void setProgress(int progress) {
-		int old_progress = _progress;
-		_progress = progress;
-		pcs.firePropertyChange("progress", old_progress, progress);
-	}
-	
-	public void addPropertyChangeListener(PropertyChangeListener listener) {
-		pcs.addPropertyChangeListener(listener);
-	}
-	
-	public void removePropertyChangeListener(PropertyChangeListener listener) {
-		pcs.removePropertyChangeListener(listener);
+
+	@Override
+	protected void done() {
+		try {
+			String filename = get();
+			System.out.format("into %s\n", filename);
+		}
+		catch(Exception e) {
+			System.err.println("failed!");
+		}
 	}
 }
