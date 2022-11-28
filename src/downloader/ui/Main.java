@@ -37,6 +37,8 @@ public class Main extends JFrame {
 		JButton addButton = new JButton("Add");
 		addButton.addActionListener(e -> {
 			createDownload(downloads, inputField.getText());
+			//update the layout
+			revalidate();
 			inputField.setText("");
 		});
 		sidePanel.add(inputField);
