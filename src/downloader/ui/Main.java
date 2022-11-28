@@ -15,18 +15,17 @@ public class Main extends JFrame {
 		// set dimension of JFrame
 		setSize(400, 300);
 
-		// set layout
-		StackLayout layout = new StackLayout();
-		setLayout(layout);
+		JPanel downloads = new JPanel();
 
 
 		// launch downloader in threads and give it to Download ProgressBar
 		for (String url : urls){
+			JPanel download = new JPanel(new BorderLayout());
 			// add url at the top of each Download
 			JLabel label = new JLabel(url);
-			add(label);
+			download.add(label, BorderLayout.NORTH);
 			Downloader downloader = new Downloader(url);
-			add(new Download(downloader));
+			download.add(new Download(downloader));
 			downloader.execute();
 			// add stop and pause button at the right of each Download
 			JPanel panel = new JPanel();
@@ -44,8 +43,11 @@ public class Main extends JFrame {
 			);
 			panel.add(stop);
 			panel.add(pause);
-			add(panel, BorderLayout.EAST);
+			download.add(panel, BorderLayout.SOUTH);
+			downloads.add(download);
 		}
+
+		add(downloads);
 
 		// add a side panel with an input field to add new download and a button to start it
 		JPanel sidePanel = new JPanel();
@@ -56,13 +58,13 @@ public class Main extends JFrame {
 		addButton.addActionListener(e -> {
 			System.out.println(inputField.getText());
 			Downloader downloader = new Downloader(inputField.getText());
-			add(new Download(downloader));
+			downloads.add(new Download(downloader));
 			downloader.execute();
 			inputField.setText("");
 		});
 		sidePanel.add(inputField);
 		sidePanel.add(addButton);
-		add(sidePanel);
+		add(sidePanel, BorderLayout.SOUTH);
 	}
 
 	public static void main(String[] args) {
